@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { signInStart, signInSuccess, signInFailure } from "../redux/user/userSlice";
 
 export default function SignIn() {
   const [formData, setFormData] = useState();
-  const [loadind, setLoadind] = useState(false);
-  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
+  const {loading, error} = useSelector((state)=>state.user);
   const navigate = useNavigate();
   const handleChange = (e) =>{
     setFormData({
@@ -15,8 +17,7 @@ export default function SignIn() {
   const handleSubmit = async (e)=>{
     e.preventDefault();
     try {
-      
-      setLoadind(true);
+      dispatch(signInStart());
       const res = await fetch('api/auth/signin', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
@@ -24,16 +25,13 @@ export default function SignIn() {
       })
       const data = await res.json();
       if(data.success === false){
-        setError(data.message);
-        setLoadind(false);
+        dispatch(signInFailure(data.message));
         return;
       }
-      setLoadind(false);
-      setError(null);
+      dispatch(signInSuccess(data));
       navigate('/')
     } catch (error) {
-      setLoadind(false)
-      setError(error.message)
+      dispatch(signInSuccess(data));
     }
   }
   return (
@@ -72,11 +70,11 @@ export default function SignIn() {
             />
           </div>
           <div className="flex items-center justify-center">
-            <button disabled={loadind}
+            <button disabled={loading}
               type="submit"
               className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              {loadind? 'loading...': 'SIGN IN'}
+              {loading? 'loading...': 'SIGN IN'}
             </button>
           </div>
         </form>
@@ -86,7 +84,7 @@ export default function SignIn() {
             Sign Up
           </a>
         </p>
-        {error && <p className="text-red-600 mt-5"> {'Wrong Credentials!'} </p>}
+        {error && <p className="text-red-600 mt-5"> {error} </p>}
       </div>
     </div>
   );
