@@ -3,7 +3,7 @@ import { useRef, useState, useEffect} from 'react';
 import { getDownloadURL, getStorage, uploadBytesResumable } from 'firebase/storage'
 import {app} from '../firebase.js'
 import { ref } from 'firebase/storage';
-import { updateUserStart, updateUserSuccess, updateUserFailure } from '../redux/user/userSlice.js'
+import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure } from '../redux/user/userSlice.js'
 import { useDispatch } from 'react-redux';
 
 export default function Profile() {
@@ -68,6 +68,26 @@ export default function Profile() {
       dispatch(error.message)
     }
   }
+
+const handleDelete = async (req, res, next)=>{
+  try {
+    dispatch(deleteUserStart());
+    const res = await fetch(`/api/user/delete/${currentUser._id}`,{
+      method:'DELETE',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(formData)
+    })
+    const data = await res.json();
+    if(data.success === false){
+      dispatch(deleteUserFailure(data.message))
+      return;
+    }
+    dispatch(deleteUserSuccess(data));
+  } catch (error) {
+    dispatch(deleteUserFailure(error.message))
+  }
+}
+
   return (
     <div className="flex items-center justify-center min-h-[90vh]">
       <div className="w-full max-w-md bg-white p-8 rounded shadow-md flex flex-col">
@@ -138,6 +158,7 @@ export default function Profile() {
           </form>
           <div className="flex justify-between mt-4">
             <button
+              onClick={handleDelete}
               type="button"
               className="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             >
