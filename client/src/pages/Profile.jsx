@@ -3,15 +3,18 @@ import { useRef, useState, useEffect} from 'react';
 import { getDownloadURL, getStorage, uploadBytesResumable } from 'firebase/storage'
 import {app} from '../firebase.js'
 import { ref } from 'firebase/storage';
+import { updateUserStart, updateUserSuccess, updateUserFailure } from '../redux/user/userSlice.js'
+import { useDispatch } from 'react-redux';
 
 export default function Profile() {
-  const {currentUser} =useSelector((state)=> state.user)
+  const {currentUser, loading, error} =useSelector((state)=> state.user)
   const fileRef = useRef('null')
   const [file, setFile] = useState(undefined)
   const [fileperc, setFileperc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false)
   const [formData, setFormData] = useState({})
-
+  const [updateSuccess, setUpdateSuccess] = useState(false)
+  const dispatch = useDispatch();
   useEffect(()=>{
     if(file){
       handleFileUpload(file);
@@ -40,6 +43,31 @@ export default function Profile() {
     }
   );
   }
+
+  const handleChange = (e) =>{
+    setFormData({...formData, [e.target.id]: e.target.value})
+  }
+  const handleSubmit= async(e)=>{
+    e.preventDefault();
+    try {
+      dispatch(updateUserStart());
+      const res = await fetch(`/api/user/update/${currentUser._id}`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(formData)
+      })
+      const data =  await res.json();
+      if(data.success === false) {
+        dispatch(updateUserFailure(data.message));
+        return;
+      }
+      dispatch(updateUserSuccess(data));
+      setUpdateSuccess(true);
+
+    } catch (error) {
+      dispatch(error.message)
+    }
+  }
   return (
     <div className="flex items-center justify-center min-h-[90vh]">
       <div className="w-full max-w-md bg-white p-8 rounded shadow-md flex flex-col">
@@ -49,7 +77,7 @@ export default function Profile() {
         <p className='text-sm self-center'>
           {fileUploadError?(<span className='text-red-600'> Error in Image Upload(Size less than 2MB)</span>) : fileperc > 0 && fileperc < 100? (<span className='text-slate-600'>{`Uploading ${fileperc}%`}</span>):fileperc===100?<span className='text-green-500'>Image Uploaded Successfully!</span> :""}
         </p>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
               htmlFor="username"
@@ -63,6 +91,7 @@ export default function Profile() {
               name="username"
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               defaultValue={currentUser.username}
+              onChange={handleChange}
             />
           </div>
           <div className="mb-4">
@@ -78,6 +107,7 @@ export default function Profile() {
               name="email"
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               defaultValue={currentUser.email}
+              onChange={handleChange}
             />
           </div>
           <div className="mb-6">
@@ -93,14 +123,16 @@ export default function Profile() {
               name="password"
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               defaultValue="CURRENT_USER_PASSWORD"
+              onChange={handleChange}
             />
           </div>
           <div className="flex justify-center mb-6">
             <button
+              disabled={loading}
               type="submit"
               className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-80"
             >
-              Update
+              {loading? 'Loading..' : 'Update'}
             </button>
           </div>
           </form>
@@ -118,6 +150,11 @@ export default function Profile() {
               Sign Out
             </button>
           </div>
+          <div className="flex justify-center mt-4">
+            <p className='text-sm text-red-700'>{error?error:""}</p>
+            <p className='text-sm text-green-700'>{updateSuccess?"Successfully Updated!":""}</p>
+          </div>
+
       </div>
     </div>
   );
