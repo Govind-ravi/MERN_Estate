@@ -1,12 +1,54 @@
 import {useSelector} from 'react-redux'
+import { useRef, useState, useEffect} from 'react';
+import { getDownloadURL, getStorage, uploadBytesResumable } from 'firebase/storage'
+import {app} from '../firebase.js'
+import { ref } from 'firebase/storage';
 
 export default function Profile() {
   const {currentUser} =useSelector((state)=> state.user)
+  const fileRef = useRef('null')
+  const [file, setFile] = useState(undefined)
+  const [fileperc, setFileperc] = useState(0);
+  const [fileUploadError, setFileUploadError] = useState(false)
+  const [formData, setFormData] = useState({})
+
+  useEffect(()=>{
+    if(file){
+      handleFileUpload(file);
+    }
+  }, [file]);
+
+  const handleFileUpload = (file) =>{
+    const storage = getStorage(app);
+    const fileName = new Date().getTime()+file.name
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+    
+
+    uploadTask.on('state_changed', 
+      (snapshot)=>{
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        setFileperc(Math.round(progress))
+      },    
+    (error)=>{
+      setFileUploadError(true)
+    },
+    ()=>{
+      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL)=>{
+        setFormData({...formData, avatar: downloadURL})
+      })
+    }
+  );
+  }
   return (
     <div className="flex items-center justify-center min-h-[90vh]">
       <div className="w-full max-w-md bg-white p-8 rounded shadow-md flex flex-col">
         <h2 className="text-2xl font-bold mb-6 text-center">Profile</h2>
-        <img src={currentUser.avatar} alt="ProfilePic" className='rounded-full h-24 w-24 object-cover cursor-pointer self-center' />
+        <input onChange={(e)=> setFile(e.target.files[0])} type='file' ref={fileRef} hidden accept='image/*'/>
+        <img onClick={()=> fileRef.current.click()} src={formData.avatar || currentUser.avatar} alt="ProfilePic" className='rounded-full h-24 w-24 object-cover cursor-pointer self-center' />
+        <p className='text-sm self-center'>
+          {fileUploadError?(<span className='text-red-600'> Error in Image Upload(Size less than 2MB)</span>) : fileperc > 0 && fileperc < 100? (<span className='text-slate-600'>{`Uploading ${fileperc}%`}</span>):fileperc===100?<span className='text-green-500'>Image Uploaded Successfully!</span> :""}
+        </p>
         <form>
           <div className="mb-4">
             <label
