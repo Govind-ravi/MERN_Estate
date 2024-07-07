@@ -3,7 +3,7 @@ import { useRef, useState, useEffect} from 'react';
 import { getDownloadURL, getStorage, uploadBytesResumable } from 'firebase/storage'
 import {app} from '../firebase.js'
 import { ref } from 'firebase/storage';
-import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure } from '../redux/user/userSlice.js'
+import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure, signOutUserStart, signOutUserSuccess, signOutUserFailure } from '../redux/user/userSlice.js'
 import { useDispatch } from 'react-redux';
 
 export default function Profile() {
@@ -87,6 +87,20 @@ const handleDelete = async (req, res, next)=>{
     dispatch(deleteUserFailure(error.message))
   }
 }
+const handleSignOut = async ()=>{
+  try {
+    dispatch(signOutUserStart());
+    const res = await fetch(`/api/auth/signout`)
+    const data = await res.json();
+    if(data.success === false){
+      dispatch(signOutUserFailure(data.message))
+      return;
+    }
+    dispatch(signOutUserSuccess(data));
+  } catch (error) {
+    dispatch(deleteUserFailure(error.message))
+  }
+}
 
   return (
     <div className="flex items-center justify-center min-h-[90vh]">
@@ -165,6 +179,7 @@ const handleDelete = async (req, res, next)=>{
               Delete Account
             </button>
             <button
+            onClick={handleSignOut}
               type="button"
               className="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
             >
