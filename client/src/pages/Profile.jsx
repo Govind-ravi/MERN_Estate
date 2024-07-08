@@ -5,6 +5,7 @@ import {app} from '../firebase.js'
 import { ref } from 'firebase/storage';
 import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure, signOutUserStart, signOutUserSuccess, signOutUserFailure } from '../redux/user/userSlice.js'
 import { useDispatch } from 'react-redux';
+import {Link} from 'react-router-dom';
 
 export default function Profile() {
   const {currentUser, loading, error} =useSelector((state)=> state.user)
@@ -160,7 +161,7 @@ const handleSignOut = async ()=>{
               onChange={handleChange}
             />
           </div>
-          <div className="flex justify-center mb-6">
+          <div className="flex flex-col gap-2 mb-6">
             <button
               disabled={loading}
               type="submit"
@@ -168,6 +169,7 @@ const handleSignOut = async ()=>{
             >
               {loading? 'Loading..' : 'Update'}
             </button>
+            <Link className='w-full py-2 px-4 text-center border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-80' to={'/create-listing'}>Create Listing</Link>
           </div>
           </form>
           <div className="flex justify-between mt-4">
