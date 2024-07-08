@@ -104,8 +104,8 @@ const handleSignOut = async ()=>{
 }
 
   return (
-    <div className="flex items-center justify-center min-h-[90vh]">
-      <div className="w-full max-w-md bg-white p-8 rounded shadow-md flex flex-col">
+    <div className="flex items-center justify-center mt-4">
+      <div className="w-full max-w-md bg-white px-8 py-4 rounded shadow-md flex flex-col">
         <h2 className="text-2xl font-bold mb-6 text-center">Profile</h2>
         <input onChange={(e)=> setFile(e.target.files[0])} type='file' ref={fileRef} hidden accept='image/*'/>
         <img onClick={()=> fileRef.current.click()} src={formData.avatar || currentUser.avatar} alt="ProfilePic" className='rounded-full h-24 w-24 object-cover cursor-pointer self-center' />
@@ -193,6 +193,7 @@ const handleSignOut = async ()=>{
             <p className='text-sm text-green-700'>{updateSuccess?"Successfully Updated!":""}</p>
           </div>
 
+            <Link className='underline text-gray-700 mt-2' to='/userlistings'>Your Listings</Link>
       </div>
     </div>
   );
