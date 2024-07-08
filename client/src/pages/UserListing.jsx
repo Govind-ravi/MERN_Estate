@@ -73,13 +73,14 @@ export default function UserListing() {
                     View Details
                   </Link>
                   <div className="flex gap-4">
+                    <Link to={`/update-listing/${listing._id}`} >
                     <button
                       className="flex items-center justify-center p-2 rounded-md text-blue-500 hover:text-blue-600 focus:outline-none"
-                      onClick={() => console.log(`Edit listing ${listing.id}`)}
                     >
                       <RiEdit2Line className="text-lg" />
                       <span className="ml-1">Edit</span>
                     </button>
+                    </Link>
                     <button
                       className="flex items-center justify-center p-2 rounded-md text-red-500 hover:text-red-600 focus:outline-none"
                       onClick={()=>handleListingDelete(listing._id)}
