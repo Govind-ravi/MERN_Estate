@@ -33,21 +33,21 @@ export default function UserListing() {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
-  const handleListingDelete = async(listingId)=>{
+  const handleListingDelete = async (listingId) => {
     try {
-      const res = await fetch(`/api/listing/delete/${listingId}`,{
-        method:'DELETE'
-      })
-      const data = await res.json()
-      if(data.success === false){
+      const res = await fetch(`/api/listing/delete/${listingId}`, {
+        method: 'DELETE'
+      });
+      const data = await res.json();
+      if (data.success === false) {
         console.log(data.message);
-        return
+        return;
       }
-      setListings((prev)=>prev.filter((listing)=>listing._id !== listingId));
+      setListings((prev) => prev.filter((listing) => listing._id !== listingId));
     } catch (error) {
-      console.log(data.message);
+      console.log(error.message);
     }
-  }
+  };
 
   return (
     <div className="p-4 max-w-6xl mx-auto">
@@ -58,41 +58,46 @@ export default function UserListing() {
         </Link>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {listings.map((listing) => (
-            <div key={listing.id} className="bg-white shadow-md rounded-lg overflow-hidden">
-              <img
-                src={listing.imageURLs[0]}
-                alt="Listing"
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-4">
-                <h2 className="text-xl font-semibold mb-2 truncate">{listing.name}</h2>
-                <p className="text-gray-700 mb-4 truncate">{listing.description}</p>
-                <div className="flex justify-between items-center">
-                  <Link to={`/listings/${listing.id}`} className="text-blue-600 hover:underline">
-                    View Details
-                  </Link>
-                  <div className="flex gap-4">
-                    <Link to={`/update-listing/${listing._id}`} >
-                    <button
-                      className="flex items-center justify-center p-2 rounded-md text-blue-500 hover:text-blue-600 focus:outline-none"
-                    >
-                      <RiEdit2Line className="text-lg" />
-                      <span className="ml-1">Edit</span>
-                    </button>
+          {listings.map((listing) => {
+            const discountPercentage = listing.offer ? Math.round(((listing.regularPrice - listing.discountPrice) / listing.regularPrice) * 100) : null;
+            return (
+              <div key={listing._id} className="bg-white shadow-md rounded-lg overflow-hidden">
+                <img
+                  src={listing.imageURLs[0]}
+                  alt="Listing"
+                  className="w-full h-48 object-cover"
+                />
+                <div className="p-4">
+                  <h2 className="text-xl font-semibold mb-2 truncate">
+                    {listing.name} - ${listing.regularPrice} {discountPercentage && <span className="text-sm text-red-500">({discountPercentage}% off)</span>}
+                  </h2>
+                  <p className="text-gray-700 mb-4 truncate">{listing.description}</p>
+                  <div className="flex justify-between items-center">
+                    <Link to={`/listing/${listing._id}`} className="text-blue-600 hover:underline">
+                      View Details
                     </Link>
-                    <button
-                      className="flex items-center justify-center p-2 rounded-md text-red-500 hover:text-red-600 focus:outline-none"
-                      onClick={()=>handleListingDelete(listing._id)}
-                    >
-                      <RiDeleteBin6Line className="text-lg" />
-                      <span className="ml-1">Delete</span>
-                    </button>
+                    <div className="flex gap-4">
+                      <Link to={`/update-listing/${listing._id}`}>
+                        <button
+                          className="flex items-center justify-center p-2 rounded-md text-blue-500 hover:text-blue-600 focus:outline-none"
+                        >
+                          <RiEdit2Line className="text-lg" />
+                          <span className="ml-1">Edit</span>
+                        </button>
+                      </Link>
+                      <button
+                        className="flex items-center justify-center p-2 rounded-md text-red-500 hover:text-red-600 focus:outline-none"
+                        onClick={() => handleListingDelete(listing._id)}
+                      >
+                        <RiDeleteBin6Line className="text-lg" />
+                        <span className="ml-1">Delete</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
