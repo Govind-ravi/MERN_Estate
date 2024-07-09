@@ -5,16 +5,31 @@ import "slick-carousel/slick/slick-theme.css";
 import { FaMapMarkerAlt, FaBed, FaBath, FaParking, FaCouch } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
+import { useSelector } from "react-redux";
+import Contact from "../components/Contact";
 
 export default function Listing() {
   const params = useParams();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [contact, setContact] = useState(false);
   const [showImagesModal, setShowImagesModal] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
 
-  const settings = {
+  const settings1 = {
     dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
+    arrows: false,
+    adaptiveHeight: true,
+  };
+  const settings2 = {
+    dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
@@ -60,7 +75,7 @@ export default function Listing() {
     <div className="relative">
       {/* Image Slider */}
       <div className="w-full h-[50vh]">
-        <Slider {...settings}>
+        <Slider {...settings1}>
           {images.map((image, index) => (
             <div key={index}>
               <img
@@ -130,6 +145,17 @@ export default function Listing() {
           </div>
         </div>
 
+        {currentUser && listing.userRef !== currentUser._id && !contact && (
+          <button
+            onClick={() => setContact(true)}
+            className="w-full bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3 mt-4"
+          >
+            Contact Landlord
+          </button>
+        )}
+        
+        {contact && <Contact listing={listing}/>}
+
         {/* View all images button */}
         <div className="fixed bottom-4 right-4">
           <button
@@ -143,8 +169,8 @@ export default function Listing() {
         {/* Images Modal */}
         {showImagesModal && (
           <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
-            <div className="relative w-[60vw] h-[80vh]">
-              <Slider {...settings}>
+            <div className="relative w-[70vw] h-[80vh]">
+              <Slider {...settings2}>
                 {images.map((image, index) => (
                   <div key={index}>
                     <img
