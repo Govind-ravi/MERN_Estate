@@ -83,17 +83,8 @@ export default function Header() {
           </Link>
         </nav>
 
-        {/* Mobile Menu Toggle */}
-        <div className="sm:hidden flex items-center">
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="text-white focus:outline-none"
-          >
-            {isMenuOpen ? (
-              <FaTimes className="text-2xl" />
-            ) : (
-              <div className="flex gap-4 items-center">
-                <form
+        <div className="flex gap-4 items-center">
+        <form
                   onSubmit={handleSubmit}
                   className="flex items-center ml-4"
                 >
@@ -105,10 +96,21 @@ export default function Header() {
                     <FaSearch className="text-white" />
                   </button>
                 </form>
+
+        {/* Mobile Menu Toggle */}
+        <div className="sm:hidden flex items-center">
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="text-white focus:outline-none"
+          >
+            {isMenuOpen ? (
+              <FaTimes className="text-2xl" />
+            ) : (
+                
                 <FaBars className="text-2xl" />
-              </div>
-            )}
+              )}
           </button>
+              </div>
         </div>
 
         {/* Mobile Menu */}
