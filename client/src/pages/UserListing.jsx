@@ -87,7 +87,7 @@ export default function UserListing() {
                 />
                 <div className="p-4">
                   <h2 className="text-xl font-semibold mb-2 truncate">
-                    {listing.name} - &#8377{listing.regularPrice}{" "}
+                    {listing.name} - ₹{listing.regularPrice}{" "}
                     {discountPercentage && (
                       <span className="text-sm text-red-500">
                         ({discountPercentage}% off)

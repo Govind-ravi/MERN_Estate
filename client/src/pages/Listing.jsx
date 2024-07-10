@@ -114,14 +114,14 @@ export default function Listing() {
         <div className="flex justify-between items-center mt-4">
           <h1 className="text-3xl font-bold">{listing.name}</h1>
           <span className="text-3xl font-bold">
-          &#8377{listing.regularPrice}
+          ₹{listing.regularPrice}
             {listing.type === "rent" && "/month"}
           </span>
         </div>
         {/* Discount Price */}
         {listing.offer && (
           <div className="text-xl text-red-500 mt-2">
-            Offer Price: &#8377{listing.discountPrice}
+            Offer Price: ₹{listing.discountPrice}
             {listing.type === "rent" && "/month"}
           </div>
         )}

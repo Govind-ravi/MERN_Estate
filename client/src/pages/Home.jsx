@@ -93,7 +93,7 @@ export default function Home() {
                   </p>
                   <div className="flex justify-between items-center mt-2">
                     <p className="text-gray-900 font-semibold">
-                    &#8377{listing.regularPrice}
+                    ₹{listing.regularPrice}
                     </p>
                     <Link
                       to={`/listing/${listing._id}`}

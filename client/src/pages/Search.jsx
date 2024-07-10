@@ -251,7 +251,7 @@ export default function Search() {
                 <p className="text-gray-600 truncate">{listing.description}</p>
                 <div className="flex items-center gap-2 mt-2">
                   <p className="text-lg font-semibold">
-                  &#8377{listing.regularPrice}
+                  ₹{listing.regularPrice}
                     {listing.type === "rent" ? " /month" : ""}
                   </p>
                   <span className="text-red-600 text-sm font-semibold">
