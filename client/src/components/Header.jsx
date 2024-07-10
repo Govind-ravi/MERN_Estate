@@ -37,7 +37,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
         <Link to="/" className="flex items-center">
           <h1 className="text-2xl font-bold text-white flex items-center">
-            <span className="text-yellow-400">Govind</span>
+            <span className="text-yellow-400">Ravi</span>
             <span className="text-yellow-200">Estate</span>
           </h1>
         </Link>
