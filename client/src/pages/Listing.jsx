@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { FaMapMarkerAlt, FaBed, FaBath, FaParking, FaCouch } from "react-icons/fa";
+import {
+  FaMapMarkerAlt,
+  FaBed,
+  FaBath,
+  FaParking,
+  FaCouch,
+} from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import { useSelector } from "react-redux";
@@ -58,7 +64,8 @@ export default function Listing() {
     fetchListing();
   }, [params.listingId]);
 
-  if (loading) return <ClipLoader color="#3498db" loading={loading} size={40} />;
+  if (loading)
+    return <ClipLoader color="#3498db" loading={loading} size={40} />;
   if (error) return <p>Error loading listing.</p>;
 
   const images = listing.imageURLs; // Use the images from the fetched listing
@@ -153,8 +160,8 @@ export default function Listing() {
             Contact Landlord
           </button>
         )}
-        
-        {contact && <Contact listing={listing}/>}
+
+        {contact && <Contact listing={listing} />}
 
         {/* View all images button */}
         <div className="fixed bottom-4 right-4">

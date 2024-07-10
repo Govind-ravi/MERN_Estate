@@ -1,40 +1,44 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { signInStart, signInSuccess, signInFailure } from "../redux/user/userSlice";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice";
 import OAuth from "../components/OAuth";
 
 export default function SignIn() {
   const [formData, setFormData] = useState();
   const dispatch = useDispatch();
-  const {loading, error} = useSelector((state)=>state.user);
+  const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const handleChange = (e) =>{
+  const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.id]: e.target.value
+      [e.target.id]: e.target.value,
     });
-  }
-  const handleSubmit = async (e)=>{
+  };
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       dispatch(signInStart());
-      const res = await fetch('api/auth/signin', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify(formData)
-      })
+      const res = await fetch("api/auth/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
       const data = await res.json();
-      if(data.success === false){
+      if (data.success === false) {
         dispatch(signInFailure(data.message));
         return;
       }
       dispatch(signInSuccess(data));
-      navigate('/')
+      navigate("/");
     } catch (error) {
       dispatch(signInSuccess(data));
     }
-  }
+  };
   return (
     <div className="flex items-center justify-center min-h-[90vh]">
       <div className="w-full max-w-md bg-white p-8 rounded shadow-md">
@@ -47,7 +51,8 @@ export default function SignIn() {
             >
               Email
             </label>
-            <input required
+            <input
+              required
               type="email"
               id="email"
               name="email"
@@ -62,7 +67,8 @@ export default function SignIn() {
             >
               Password
             </label>
-            <input required
+            <input
+              required
               type="password"
               id="password"
               name="password"
@@ -71,14 +77,15 @@ export default function SignIn() {
             />
           </div>
           <div className="flex items-center justify-center">
-            <button disabled={loading}
+            <button
+              disabled={loading}
               type="submit"
               className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              {loading? 'loading...': 'SIGN IN'}
+              {loading ? "loading..." : "SIGN IN"}
             </button>
           </div>
-          <OAuth/>
+          <OAuth />
         </form>
         <p className="mt-4 text-center text-sm text-gray-600">
           Don't have an account?{" "}

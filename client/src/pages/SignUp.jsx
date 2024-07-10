@@ -7,36 +7,35 @@ export default function SignUp() {
   const [loadind, setLoadind] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const handleChange = (e) =>{
+  const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.id]: e.target.value
+      [e.target.id]: e.target.value,
     });
-  }
-  const handleSubmit = async (e)=>{
+  };
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      
       setLoadind(true);
-      const res = await fetch('api/auth/signup', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify(formData)
-      })
+      const res = await fetch("api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
       const data = await res.json();
-      if(data.success === false){
+      if (data.success === false) {
         setError(data.message);
         setLoadind(false);
         return;
       }
       setLoadind(false);
       setError(null);
-      navigate('/sign-in')
+      navigate("/sign-in");
     } catch (error) {
-      setLoadind(false)
-      setError(error.message)
+      setLoadind(false);
+      setError(error.message);
     }
-  }
+  };
   return (
     <div className="flex items-center justify-center min-h-[90vh]">
       <div className="w-full max-w-md bg-white p-8 rounded shadow-md">
@@ -65,7 +64,8 @@ export default function SignUp() {
             >
               Email
             </label>
-            <input required
+            <input
+              required
               type="email"
               id="email"
               name="email"
@@ -80,7 +80,8 @@ export default function SignUp() {
             >
               Password
             </label>
-            <input required
+            <input
+              required
               type="password"
               id="password"
               name="password"
@@ -89,14 +90,15 @@ export default function SignUp() {
             />
           </div>
           <div className="flex items-center justify-center">
-            <button disabled={loadind}
+            <button
+              disabled={loadind}
               type="submit"
               className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              {loadind? 'loading...': 'SIGN UP'}
+              {loadind ? "loading..." : "SIGN UP"}
             </button>
           </div>
-          <OAuth/>
+          <OAuth />
         </form>
         <p className="mt-4 text-center text-sm text-gray-600">
           Already have an account?{" "}
@@ -104,7 +106,12 @@ export default function SignUp() {
             Sign In
           </a>
         </p>
-        {error && <p className="text-red-600 mt-5"> {'Username or email already taken.'} </p>}
+        {error && (
+          <p className="text-red-600 mt-5">
+            {" "}
+            {"Username or email already taken."}{" "}
+          </p>
+        )}
       </div>
     </div>
   );

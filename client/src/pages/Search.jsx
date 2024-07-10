@@ -17,7 +17,7 @@ export default function Search() {
 
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
-  const [showMore, setShowMore] = useState(false)
+  const [showMore, setShowMore] = useState(false);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -55,10 +55,10 @@ export default function Search() {
       const searchQuery = urlParams.toString();
       const res = await fetch(`/api/listing/get?${searchQuery}`);
       const data = await res.json();
-      if(data.length > 8){
-        setShowMore(true)
-      }else{
-        setShowMore(false)
+      if (data.length > 8) {
+        setShowMore(true);
+      } else {
+        setShowMore(false);
       }
       setListings(data);
       setLoading(false);
@@ -107,20 +107,19 @@ export default function Search() {
     navigate(`/search?${searchQuery}`);
   };
 
-
-  const onShowMoreClick = async()=>{
+  const onShowMoreClick = async () => {
     const numberOfListings = listings.length;
     const startIndex = numberOfListings;
     const urlParams = new URLSearchParams();
-    urlParams.set('startIndex', startIndex);
+    urlParams.set("startIndex", startIndex);
     const searchQuery = urlParams.toString();
     const res = await fetch(`/api/listing/get?${searchQuery}`);
-      const data = await res.json();
-      if(data.length < 9){
-        setShowMore(false)
-      }
-      setListings([...listings, ...data])
-  }
+    const data = await res.json();
+    if (data.length < 9) {
+      setShowMore(false);
+    }
+    setListings([...listings, ...data]);
+  };
 
   return (
     <div className="flex flex-col md:flex-row md:min-h-screen">
@@ -252,7 +251,8 @@ export default function Search() {
                 <p className="text-gray-600 truncate">{listing.description}</p>
                 <div className="flex items-center gap-2 mt-2">
                   <p className="text-lg font-semibold">
-                    ${listing.regularPrice}{listing.type === 'rent'?' /month':''}
+                    ${listing.regularPrice}
+                    {listing.type === "rent" ? " /month" : ""}
                   </p>
                   <span className="text-red-600 text-sm font-semibold">
                     {listing.offer
@@ -271,7 +271,16 @@ export default function Search() {
           )}
         </div>
 
-        {showMore && <button onClick={()=>{onShowMoreClick()}} className="bg-indigo-900 text-white px-4 py-2 rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none">View More</button>}
+        {showMore && (
+          <button
+            onClick={() => {
+              onShowMoreClick();
+            }}
+            className="bg-indigo-900 text-white px-4 py-2 rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none"
+          >
+            View More
+          </button>
+        )}
       </div>
     </div>
   );
