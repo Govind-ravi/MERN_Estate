@@ -111,7 +111,7 @@ export default function Listing() {
 
       <div className="max-w-4xl mx-auto relative p-2">
         {/* Title and Price */}
-        <div className="flex justify-between items-center mt-4">
+        <div className="flex flex-col sm:flex-row justify-between items-center mt-4">
           <h1 className="text-3xl font-bold">{listing.name}</h1>
           <span className="text-3xl font-bold">
           ₹{listing.regularPrice}
