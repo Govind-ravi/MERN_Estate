@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -22,6 +22,7 @@ export default function Listing() {
   const [contact, setContact] = useState(false);
   const [showImagesModal, setShowImagesModal] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
+  const imagesModalRef = useRef();
 
   const settings1 = {
     dots: false,
@@ -63,6 +64,19 @@ export default function Listing() {
     };
     fetchListing();
   }, [params.listingId]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (imagesModalRef.current && !imagesModalRef.current.contains(event.target)) {
+        setShowImagesModal(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   if (loading)
     return <ClipLoader color="#3498db" loading={loading} size={40} />;
@@ -176,14 +190,14 @@ export default function Listing() {
         {/* Images Modal */}
         {showImagesModal && (
           <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
-            <div className="relative w-[70vw] h-[80vh]">
+            <div ref={imagesModalRef} className="relative w-[70vw] h-[50vh] md:h-[80vh]">
               <Slider {...settings2}>
                 {images.map((image, index) => (
                   <div key={index}>
                     <img
                       src={image}
                       alt={`Slide ${index}`}
-                      className="w-full h-[80vh] object-contain"
+                      className="w-full h-[50vh] md:h-[80vh] object-contain"
                     />
                   </div>
                 ))}

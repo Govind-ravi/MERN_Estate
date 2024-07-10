@@ -26,13 +26,13 @@ export default function Home() {
     };
 
     // Fetch recent offers
-    fetchListings("", 4, true).then((data) => setRecentOffers(data));
+    fetchListings("", 3, true).then((data) => setRecentOffers(data));
 
     // Fetch recent rentals
-    fetchListings("rent", 4, false).then((data) => setRecentRentals(data));
+    fetchListings("rent", 3, false).then((data) => setRecentRentals(data));
 
     // Fetch recent sales
-    fetchListings("sale", 4, false).then((data) => setRecentSales(data));
+    fetchListings("sale", 3, false).then((data) => setRecentSales(data));
   }, []);
 
   const calculateOfferPercentage = (regularPrice, discountPrice) => {
