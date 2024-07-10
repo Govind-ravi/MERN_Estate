@@ -52,7 +52,7 @@ export default function Home() {
               key={listing._id}
               className="bg-white shadow-md rounded-lg overflow-hidden"
             >
-              <Link to={`/listing/${listing._id}`} className="block">
+              <Link to={`/listing/${listing._id}`} className="block px-2">
                 <img
                   src={listing.imageURLs[0]}
                   alt={listing.name}

@@ -109,7 +109,7 @@ export default function Listing() {
         </Slider>
       </div>
 
-      <div className="max-w-4xl mx-auto relative">
+      <div className="max-w-4xl mx-auto relative p-2">
         {/* Title and Price */}
         <div className="flex justify-between items-center mt-4">
           <h1 className="text-3xl font-bold">{listing.name}</h1>
