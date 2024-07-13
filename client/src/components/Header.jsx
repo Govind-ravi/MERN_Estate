@@ -83,7 +83,7 @@ export default function Header() {
           </Link>
         </nav>
 
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-4 items-center sm:hidden">
         <form 
                   onSubmit={handleSubmit}
                   className="flex items-center ml-4 sm:hidden"
